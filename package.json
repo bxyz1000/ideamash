@@ -1,0 +1,35 @@
+{
+  "name": "ideamash",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "seed": "ts-node --compilerOptions \"{\\\"module\\\":\\\"CommonJS\\\"}\" scripts/seedIdeas.ts"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "date-fns": "^4.1.0",
+    "firebase": "^12.13.0",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.14.0",
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-hot-toast": "^2.6.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
+  }
+}
