@@ -11,10 +11,6 @@ import {
   limit,
   onSnapshot,
   getDocs,
-  addDoc,
-  serverTimestamp,
-  updateDoc,
-  doc,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/AuthContext';
@@ -26,21 +22,108 @@ import TopIdeasDeck from '@/components/TopIdeasDeck';
 import PitchDeckModal, { type ModalIdea } from '@/components/PitchDeckModal';
 import Footer from '@/components/Footer';
 import { heatScore } from '@/lib/utils';
-import { generateAiCard } from '@/lib/gemini';
 import toast from 'react-hot-toast';
 
 const CATEGORIES = ['All', 'AI', 'Marketplace', 'B2B', 'Consumer', 'SaaS', 'Hardware', 'Other'];
 const SORTS = ['Hot', 'New', 'Controversial'];
 
-const SEED_IDEAS = [
-  { author: 'ghostfounder', title: 'AI ghostwriter that learns YOUR voice', desc: 'Founders are bad writers. An AI that learns your voice from Slack and Twitter then writes emails, LinkedIn posts, and pitch decks in your actual tone. Target: non-tech founders who hate writing.', category: 'AI', upvotes: ['stealthmode', 'buildfast'], downvotes: [], comments: [], video: '' },
-  { author: 'buildfast', title: 'WhatsApp OS for Indian kirana stores', desc: 'Kirana stores run their whole business on WhatsApp groups — suppliers, accountants, customers. Total chaos. An app that auto-organises those chats into orders, invoices, and inventory. No new behaviour needed.', category: 'B2B', upvotes: ['ghostfounder', 'stealthmode', 'redpill'], downvotes: [], comments: [{ id: 'c1', author: 'redpill', text: 'This is real. My uncle runs a kirana and lives on WhatsApp.', ts: Date.now() }], video: '' },
-  { author: 'stealthmode', title: 'Anonymous salary DB for Indian startups', desc: 'Startup salaries in India are a black box. A fully anonymous database where employees submit comp, equity, role, company — verified by offer letter. Job seekers get real leverage.', category: 'B2B', upvotes: ['ghostfounder', 'buildfast'], downvotes: ['redpill'], comments: [], video: '' },
-  { author: 'redpill', title: 'Rent-a-co-founder marketplace', desc: 'Solo founders burn out and make bad decisions alone. Hire experienced operators part-time as co-founder — equity optional, fixed retainer. Fractional CTO but for everything.', category: 'Marketplace', upvotes: ['stealthmode'], downvotes: [], comments: [], video: '' },
-  { author: 'ghostfounder', title: 'Vernacular pitch deck builder', desc: 'Most Indian founders pitch in English but think in Hindi, Tamil, Telugu. A tool that lets you build pitch decks in your language then auto-translates for investors. Huge untapped tier-2/3 market.', category: 'SaaS', upvotes: ['buildfast', 'stealthmode', 'redpill'], downvotes: [], comments: [], video: '' },
-  { author: 'buildfast', title: 'UPI split for college students', desc: 'College students split bills constantly — mess fees, trips, supplies — but current apps are too complex. A dead-simple UPI-native split app built for Indian college groups with WhatsApp integration.', category: 'Consumer', upvotes: ['ghostfounder'], downvotes: ['stealthmode'], comments: [], video: '' },
-  { author: 'stealthmode', title: 'B2B SaaS for CA firms in India', desc: 'India has 300,000+ CA firms still running on Excel and WhatsApp. A simple practice management SaaS for client tracking, document collection, deadline reminders. Massive underserved market.', category: 'SaaS', upvotes: ['redpill', 'buildfast', 'ghostfounder'], downvotes: [], comments: [], video: '' },
-  { author: 'redpill', title: 'Micro-internship platform for tier-2 colleges', desc: 'Tier-2 college students in India have zero access to real work experience. A platform connecting them with early-stage startups for 2-4 week paid micro-internships. Startups get cheap talent, students get experience.', category: 'Marketplace', upvotes: ['ghostfounder', 'stealthmode'], downvotes: [], comments: [], video: '' },
+const FALLBACK_IDEAS = [
+  {
+    id: 'seed1',
+    author: 'karan_builds',
+    title: 'AI ghostwriter that learns YOUR voice',
+    desc: 'Founders are bad writers. An AI that learns your voice from Slack and Twitter then writes emails, LinkedIn posts, pitch decks in your actual tone. Target: non-tech founders who hate writing.',
+    category: 'AI',
+    upvotes: ['priya_ships', 'deepak_saas', 'rohit_0to1'],
+    downvotes: ['vikram_ops'],
+    comments: [{ id: 'c1', author: 'deepak_saas', text: 'Notion AI does something similar but the voice part is real differentiation', ts: Date.now() - 3600000 }],
+    ts: Date.now() - 86400000,
+    aiCard: { headline: 'An AI writing assistant that sounds exactly like you, not like a robot', insights: ['Targets non-tech founders who publish on LinkedIn daily', 'Current AI tools produce generic output that sounds nothing like the user', 'Voice model trains on existing Slack/Twitter data with zero extra effort'] },
+  },
+  {
+    id: 'seed2',
+    author: 'nisha_founder',
+    title: 'WhatsApp OS for Indian kirana stores',
+    desc: 'Kirana stores run their whole business on WhatsApp groups — suppliers, accountants, delivery guys, customers. Total chaos. An app that auto-organises those chats into orders, invoices, inventory.',
+    category: 'B2B',
+    upvotes: ['karan_builds', 'nisha_founder', 'ananya_vc', 'rohit_0to1'],
+    downvotes: [],
+    comments: [{ id: 'c2', author: 'nisha_founder', text: 'Bhai ye toh real problem hai. My cousin runs a kirana and his entire day is WhatsApp', ts: Date.now() - 7200000 }],
+    ts: Date.now() - 43200000,
+    aiCard: { headline: 'Turns chaotic kirana WhatsApp groups into structured business operations', insights: ['Targets 12M+ kirana stores in India running on informal WhatsApp systems', 'No new behaviour needed — works on top of existing WhatsApp usage', 'Massive underserved market with zero organised software penetration'] },
+  },
+  {
+    id: 'seed3',
+    author: 'deepak_saas',
+    title: 'B2B SaaS for CA firms — finally',
+    desc: 'India has 300,000+ CA firms still running on Excel and WhatsApp. A simple practice management SaaS: client tracking, document collection, deadline reminders, billing. Massive underserved market.',
+    category: 'SaaS',
+    upvotes: ['ananya_vc', 'karan_builds', 'priya_ships'],
+    downvotes: ['rohit_0to1'],
+    comments: [],
+    ts: Date.now() - 21600000,
+    aiCard: { headline: 'Practice management software built specifically for Indian CA firms', insights: ['300,000+ CA firms in India, virtually none using dedicated software', 'Average CA firm loses 30% of billable time to manual admin work', 'Recurring revenue model — CAs renew software annually like clockwork'] },
+  },
+  {
+    id: 'seed4',
+    author: 'priya_ships',
+    title: 'Vernacular pitch deck builder',
+    desc: 'Most Indian founders pitch in English but think in Hindi, Tamil, Telugu. A tool that lets you build pitch decks in your language then auto-translates for investors. Huge untapped tier-2/3 market.',
+    category: 'AI',
+    upvotes: ['priya_ships', 'vikram_ops'],
+    downvotes: [],
+    comments: [{ id: 'c3', author: 'rohit_0to1', text: 'Sahi hai yaar — I always struggle switching between Hindi thinking and English writing', ts: Date.now() - 900000 }],
+    ts: Date.now() - 10800000,
+    aiCard: { headline: 'Build your pitch deck in Hindi or Tamil, auto-translate for English investors', insights: ['Targets tier-2/3 founders who think and communicate in regional languages', 'Translation + formatting removes the biggest barrier to professional fundraising', 'No comparable product exists for Indian regional language founders'] },
+  },
+  {
+    id: 'seed5',
+    author: 'rohit_0to1',
+    title: 'Anonymous salary DB for Indian startups',
+    desc: 'Startup salaries in India are a total black box. A fully anonymous database where employees submit comp, equity, role, company — verified by offer letter format. Job seekers finally get leverage.',
+    category: 'B2B',
+    upvotes: ['deepak_saas', 'vikram_ops', 'karan_builds'],
+    downvotes: ['ananya_vc'],
+    comments: [{ id: 'c4', author: 'ananya_vc', text: "Glassdoor exists but has terrible India data. The verification angle is what makes this real.", ts: Date.now() - 1800000 }],
+    ts: Date.now() - 5400000,
+    aiCard: { headline: "India's first verified anonymous salary database for startup employees", insights: ['Indian startup salaries are completely opaque — no reliable public data exists', 'Offer letter verification prevents fake submissions unlike Glassdoor', 'Job seekers and employees gain real negotiation leverage for the first time'] },
+  },
+  {
+    id: 'seed6',
+    author: 'vikram_ops',
+    title: 'Micro-internship platform for tier-2 colleges',
+    desc: 'Tier-2 college students in India have zero access to real work experience. A platform connecting them with early-stage startups for 2-4 week paid micro-internships. Startups get cheap talent, students get experience.',
+    category: 'Marketplace',
+    upvotes: ['karan_builds', 'priya_ships'],
+    downvotes: [],
+    comments: [],
+    ts: Date.now() - 172800000,
+    aiCard: { headline: 'Connects tier-2 college students with startup internships in 2-4 week sprints', insights: ['60M+ students in tier-2/3 colleges with near-zero placement opportunities', 'Short commitment lowers barrier for both startups and students', 'Network effects — companies return for next cohort if first intern delivers'] },
+  },
+  {
+    id: 'seed7',
+    author: 'shreya_design',
+    title: 'UPI split for college hostel groups',
+    desc: 'College students split bills constantly — mess fees, trips, supplies — but current apps are too complex. A dead-simple UPI-native split app built for Indian college groups with WhatsApp integration.',
+    category: 'Consumer',
+    upvotes: ['rohit_0to1', 'nisha_founder'],
+    downvotes: ['deepak_saas'],
+    comments: [{ id: 'c5', author: 'karan_builds', text: 'Splitwise is too Western. The UPI-native angle is interesting', ts: Date.now() - 14400000 }],
+    ts: Date.now() - 259200000,
+    aiCard: { headline: 'UPI-native bill splitting built for Indian college hostel life', insights: ['Splitwise and similar apps designed for western banking, not UPI', 'College students are high-frequency users — 5-10 splits per week', 'WhatsApp integration means zero new habit formation required'] },
+  },
+  {
+    id: 'seed8',
+    author: 'ananya_vc',
+    title: 'Rent-a-co-founder marketplace',
+    desc: 'Solo founders burn out and make bad decisions alone. Hire experienced operators part-time as co-founder — equity optional, fixed retainer. Fractional CTO but for everything, built for Indian startup ecosystem.',
+    category: 'Marketplace',
+    upvotes: ['shreya_design', 'vikram_ops', 'priya_ships'],
+    downvotes: [],
+    comments: [],
+    ts: Date.now() - 345600000,
+    aiCard: { headline: 'Fractional co-founder marketplace for solo Indian startup founders', insights: ['Solo founders are 50% more likely to fail than teams — the data is clear', 'Retainer model removes equity friction that kills co-founder conversations', 'Large pool of experienced operators in India looking for flexible work'] },
+  },
 ];
 
 interface Idea {
@@ -98,30 +181,6 @@ export default function HomePage() {
   useEffect(() => {
     const q = query(collection(db, 'ideas'), orderBy('ts', 'desc'), limit(50));
     const unsub = onSnapshot(q, (snap) => {
-      if (snap.empty) {
-        if (!localStorage.getItem('ideamash_seeded')) {
-          localStorage.setItem('ideamash_seeded', 'true');
-          const seedFirestore = async () => {
-            try {
-              for (const idea of SEED_IDEAS) {
-                const ref = await addDoc(collection(db, 'ideas'), {
-                  ...idea,
-                  authorUid: 'seed_uid',
-                  ts: serverTimestamp(),
-                  aiCard: null,
-                });
-                generateAiCard(idea.title, idea.desc).then((aiCard) => {
-                  if (aiCard) updateDoc(doc(db, 'ideas', ref.id), { aiCard });
-                });
-              }
-            } catch (err) {
-              console.error('Seed failed', err);
-            }
-          };
-          seedFirestore();
-        }
-      }
-
       const docs = snap.docs.map((d) => ({
         id: d.id,
         ...d.data(),
@@ -141,14 +200,9 @@ export default function HomePage() {
     return unsub;
   }, []);
 
-  const fallbackIdeas = SEED_IDEAS.map((si, i) => ({
-    ...si,
-    id: `seed-${i}`,
-    ts: Date.now() - i * 10000,
-    aiCard: null,
-  })) as Idea[];
+  const fallbackIdeas = FALLBACK_IDEAS as Idea[];
 
-  // Show seed data as fallback if error or empty (but not while loading)
+  // Show fallback data if error or Firestore returns empty (not while loading)
   const displayIdeas = ideas.length > 0 ? ideas : (loading ? [] : fallbackIdeas);
 
   const sorted = [...displayIdeas]

@@ -3,8 +3,7 @@
 import { useState, Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/AuthContext';
 import { validateUsername } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -13,32 +12,11 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
-  const { signup, login } = useAuth();
+  const { signup, login, user, loading: authLoading } = useAuth();
   const [tab, setTab] = useState<'login' | 'signup'>('login');
   const [loading, setLoading] = useState(false);
-  const [authReady, setAuthReady] = useState(false);
 
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push(redirectTo);
-      } else {
-        setAuthReady(true);
-      }
-    });
-    return unsub;
-  }, [router, redirectTo]);
-
-  if (!authReady) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#0a0a0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ width: 32, height: 32, border: '3px solid rgba(255,255,255,0.1)', borderTop: '3px solid #3dffc0', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
-  }
-
-  // Login state
+  // Login state — must be at top level (rules of hooks)
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -48,6 +26,16 @@ function LoginForm() {
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirm, setSignupConfirm] = useState('');
   const [signupError, setSignupError] = useState('');
+
+  // Redirect only once we KNOW user is logged in — don't block render
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push(redirectTo);
+    }
+  }, [user, authLoading, router, redirectTo]);
+
+  // Already logged in — show nothing while redirect fires
+  if (!authLoading && user) return null;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

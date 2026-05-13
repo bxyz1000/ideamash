@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
-import { db, auth } from '@/lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/AuthContext';
 import { generateAiCard } from '@/lib/gemini';
 import Nav from '@/components/Nav';
@@ -23,36 +22,25 @@ export default function PostPage() {
   const [submitting, setSubmitting] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
 
-  const [authReady, setAuthReady] = useState(false);
-
-  // Redirect if not logged in
+  // Redirect if not logged in — after auth resolves
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (firebaseUser) => {
-      if (!firebaseUser) {
-        router.push('/login?redirect=/post');
-      } else {
-        setAuthReady(true);
-      }
-    });
-    return unsub;
-  }, [router]);
+    if (!loading && !user) {
+      router.push('/login?redirect=/post');
+    }
+  }, [user, loading, router]);
 
-  if (!authReady) {
+  // Show spinner while Firebase resolves
+  if (loading) {
     return (
       <div style={{ minHeight: '100vh', background: '#0a0a0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ width: 32, height: 32, border: '3px solid rgba(255,255,255,0.1)', borderTop: '3px solid #3dffc0', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
-  // Still need profile to get username
-  if (!user || (!profile && loading)) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#0a0a0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ width: 32, height: 32, border: '3px solid rgba(255,255,255,0.1)', borderTop: '3px solid #3dffc0', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-      </div>
-    );
-  }
+  // Not logged in — redirecting
+  if (!user) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
