@@ -8,11 +8,11 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 export const metadata: Metadata = {
   title: 'IdeaMash — Startup Ideas Judged by Real Humans',
   description:
-    'Post your startup idea. Get brutal honest votes from real founders. No AI hype, no fake validation. Just 🔥 crazy shit or 🗑 dump it.',
+    'Post your startup idea. Get brutal honest votes from real founders worldwide. No AI hype, no fake validation. Just 🔥 crazy shit or 🗑 dump it.',
   openGraph: {
     title: 'IdeaMash — Startup Ideas Judged by Real Humans',
     description:
-      'Post your startup idea. Get brutal honest votes from real founders. No AI hype, no fake validation.',
+      'Post your startup idea. Get brutal honest votes from real founders worldwide. No AI hype, no fake validation.',
     url: 'https://ideamash.vercel.app',
     siteName: 'IdeaMash',
     type: 'website',

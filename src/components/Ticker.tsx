@@ -7,14 +7,14 @@ export default function Ticker() {
     '💬 real feedback',
     '⚡ brutal validation',
     '🚀 raw ideas',
-    '🇮🇳 made by founders',
+    '🌍 made by founders',
     '💀 no fake hype',
     '🔥 crazy shit',
     '🗑 dump it',
     '💬 real feedback',
     '⚡ brutal validation',
     '🚀 raw ideas',
-    '🇮🇳 made by founders',
+    '🌍 made by founders',
     '💀 no fake hype',
   ];
 

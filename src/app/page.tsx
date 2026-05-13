@@ -43,56 +43,56 @@ const FALLBACK_IDEAS = [
   {
     id: 'seed2',
     author: 'nisha_founder',
-    title: 'WhatsApp OS for Indian kirana stores',
-    desc: 'Kirana stores run their whole business on WhatsApp groups — suppliers, accountants, delivery guys, customers. Total chaos. An app that auto-organises those chats into orders, invoices, inventory.',
+    title: 'WhatsApp OS for small retail stores',
+    desc: 'Small stores run their whole business on WhatsApp groups — suppliers, accountants, delivery guys, customers. Total chaos. An app that auto-organises those chats into orders, invoices, inventory.',
     category: 'B2B',
     upvotes: ['karan_builds', 'nisha_founder', 'ananya_vc', 'rohit_0to1'],
     downvotes: [],
-    comments: [{ id: 'c2', author: 'nisha_founder', text: 'Bhai ye toh real problem hai. My cousin runs a kirana and his entire day is WhatsApp', ts: Date.now() - 7200000 }],
+    comments: [{ id: 'c2', author: 'nisha_founder', text: 'Bhai ye toh real problem hai. My cousin runs a shop and his entire day is WhatsApp', ts: Date.now() - 7200000 }],
     ts: Date.now() - 43200000,
-    aiCard: { headline: 'Turns chaotic kirana WhatsApp groups into structured business operations', insights: ['Targets 12M+ kirana stores in India running on informal WhatsApp systems', 'No new behaviour needed — works on top of existing WhatsApp usage', 'Massive underserved market with zero organised software penetration'] },
+    aiCard: { headline: 'Turns chaotic retail WhatsApp groups into structured business operations', insights: ['Targets millions of small shops running on informal WhatsApp systems', 'No new behaviour needed — works on top of existing WhatsApp usage', 'Massive underserved market with zero organised software penetration'] },
   },
   {
     id: 'seed3',
     author: 'deepak_saas',
     title: 'B2B SaaS for CA firms — finally',
-    desc: 'India has 300,000+ CA firms still running on Excel and WhatsApp. A simple practice management SaaS: client tracking, document collection, deadline reminders, billing. Massive underserved market.',
+    desc: 'There are hundreds of thousands of CA/accounting firms still running on Excel and WhatsApp. A simple practice management SaaS: client tracking, document collection, deadline reminders, billing. Massive underserved market.',
     category: 'SaaS',
     upvotes: ['ananya_vc', 'karan_builds', 'priya_ships'],
     downvotes: ['rohit_0to1'],
     comments: [],
     ts: Date.now() - 21600000,
-    aiCard: { headline: 'Practice management software built specifically for Indian CA firms', insights: ['300,000+ CA firms in India, virtually none using dedicated software', 'Average CA firm loses 30% of billable time to manual admin work', 'Recurring revenue model — CAs renew software annually like clockwork'] },
+    aiCard: { headline: 'Practice management software built specifically for accounting firms', insights: ['Hundreds of thousands of accounting firms with virtually none using dedicated software', 'Average firm loses 30% of billable time to manual admin work', 'Recurring revenue model — firms renew software annually like clockwork'] },
   },
   {
     id: 'seed4',
     author: 'priya_ships',
     title: 'Vernacular pitch deck builder',
-    desc: 'Most Indian founders pitch in English but think in Hindi, Tamil, Telugu. A tool that lets you build pitch decks in your language then auto-translates for investors. Huge untapped tier-2/3 market.',
+    desc: 'Many founders pitch in English but think in their native language. A tool that lets you build pitch decks in your language then auto-translates for investors. Huge untapped global market.',
     category: 'AI',
     upvotes: ['priya_ships', 'vikram_ops'],
     downvotes: [],
-    comments: [{ id: 'c3', author: 'rohit_0to1', text: 'Sahi hai yaar — I always struggle switching between Hindi thinking and English writing', ts: Date.now() - 900000 }],
+    comments: [{ id: 'c3', author: 'rohit_0to1', text: 'Sahi hai yaar — I always struggle switching between native thinking and English writing', ts: Date.now() - 900000 }],
     ts: Date.now() - 10800000,
-    aiCard: { headline: 'Build your pitch deck in Hindi or Tamil, auto-translate for English investors', insights: ['Targets tier-2/3 founders who think and communicate in regional languages', 'Translation + formatting removes the biggest barrier to professional fundraising', 'No comparable product exists for Indian regional language founders'] },
+    aiCard: { headline: 'Build your pitch deck in your language, auto-translate for investors', insights: ['Targets founders who think and communicate in non-English languages', 'Translation + formatting removes the biggest barrier to professional fundraising', 'No comparable product exists for non-English-first founders globally'] },
   },
   {
     id: 'seed5',
     author: 'rohit_0to1',
-    title: 'Anonymous salary DB for Indian startups',
-    desc: 'Startup salaries in India are a total black box. A fully anonymous database where employees submit comp, equity, role, company — verified by offer letter format. Job seekers finally get leverage.',
+    title: 'Anonymous salary DB for startups',
+    desc: 'Startup salaries are a total black box. A fully anonymous database where employees submit comp, equity, role, company — verified by offer letter format. Job seekers finally get leverage.',
     category: 'B2B',
     upvotes: ['deepak_saas', 'vikram_ops', 'karan_builds'],
     downvotes: ['ananya_vc'],
-    comments: [{ id: 'c4', author: 'ananya_vc', text: "Glassdoor exists but has terrible India data. The verification angle is what makes this real.", ts: Date.now() - 1800000 }],
+    comments: [{ id: 'c4', author: 'ananya_vc', text: "Glassdoor exists but has terrible data outside the US. The verification angle is what makes this real.", ts: Date.now() - 1800000 }],
     ts: Date.now() - 5400000,
-    aiCard: { headline: "India's first verified anonymous salary database for startup employees", insights: ['Indian startup salaries are completely opaque — no reliable public data exists', 'Offer letter verification prevents fake submissions unlike Glassdoor', 'Job seekers and employees gain real negotiation leverage for the first time'] },
+    aiCard: { headline: "The first verified anonymous salary database for startup employees", insights: ['Startup salaries are completely opaque — no reliable public data exists', 'Offer letter verification prevents fake submissions unlike Glassdoor', 'Job seekers and employees gain real negotiation leverage for the first time'] },
   },
   {
     id: 'seed6',
     author: 'vikram_ops',
     title: 'Micro-internship platform for tier-2 colleges',
-    desc: 'Tier-2 college students in India have zero access to real work experience. A platform connecting them with early-stage startups for 2-4 week paid micro-internships. Startups get cheap talent, students get experience.',
+    desc: 'University students often have zero access to real work experience. A platform connecting them with early-stage startups for 2-4 week paid micro-internships. Startups get cheap talent, students get experience.',
     category: 'Marketplace',
     upvotes: ['karan_builds', 'priya_ships'],
     downvotes: [],
@@ -104,25 +104,25 @@ const FALLBACK_IDEAS = [
     id: 'seed7',
     author: 'shreya_design',
     title: 'UPI split for college hostel groups',
-    desc: 'College students split bills constantly — mess fees, trips, supplies — but current apps are too complex. A dead-simple UPI-native split app built for Indian college groups with WhatsApp integration.',
+    desc: 'College students split bills constantly — dorm fees, trips, supplies — but current apps are too complex. A dead-simple mobile-native split app built for college groups with WhatsApp and chat integration.',
     category: 'Consumer',
     upvotes: ['rohit_0to1', 'nisha_founder'],
     downvotes: ['deepak_saas'],
-    comments: [{ id: 'c5', author: 'karan_builds', text: 'Splitwise is too Western. The UPI-native angle is interesting', ts: Date.now() - 14400000 }],
+    comments: [{ id: 'c5', author: 'karan_builds', text: 'Splitwise is too complex. A lightweight native app would crush it', ts: Date.now() - 14400000 }],
     ts: Date.now() - 259200000,
-    aiCard: { headline: 'UPI-native bill splitting built for Indian college hostel life', insights: ['Splitwise and similar apps designed for western banking, not UPI', 'College students are high-frequency users — 5-10 splits per week', 'WhatsApp integration means zero new habit formation required'] },
+    aiCard: { headline: 'Simple bill splitting built for college student life', insights: ['Splitwise and similar apps are complex and designed for older users', 'College students are high-frequency users — 5-10 splits per week', 'Chat integration means zero new habit formation required'] },
   },
   {
     id: 'seed8',
     author: 'ananya_vc',
     title: 'Rent-a-co-founder marketplace',
-    desc: 'Solo founders burn out and make bad decisions alone. Hire experienced operators part-time as co-founder — equity optional, fixed retainer. Fractional CTO but for everything, built for Indian startup ecosystem.',
+    desc: 'Solo founders burn out and make bad decisions alone. Hire experienced operators part-time as co-founder — equity optional, fixed retainer. Fractional CTO but for everything.',
     category: 'Marketplace',
     upvotes: ['shreya_design', 'vikram_ops', 'priya_ships'],
     downvotes: [],
     comments: [],
     ts: Date.now() - 345600000,
-    aiCard: { headline: 'Fractional co-founder marketplace for solo Indian startup founders', insights: ['Solo founders are 50% more likely to fail than teams — the data is clear', 'Retainer model removes equity friction that kills co-founder conversations', 'Large pool of experienced operators in India looking for flexible work'] },
+    aiCard: { headline: 'Fractional co-founder marketplace for solo startup founders', insights: ['Solo founders are 50% more likely to fail than teams — the data is clear', 'Retainer model removes equity friction that kills co-founder conversations', 'Large pool of experienced operators looking for flexible work globally'] },
   },
 ];
 
@@ -282,25 +282,6 @@ export default function HomePage() {
 
         <div style={{ position: 'relative', maxWidth: 860, textAlign: 'center' }}>
           {/* Eyebrow */}
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              marginBottom: 28,
-              padding: '6px 16px',
-              background: 'rgba(61,255,192,0.08)',
-              border: '1px solid rgba(61,255,192,0.2)',
-              borderRadius: 100,
-              fontSize: 12,
-              fontWeight: 600,
-              color: '#3dffc0',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-            }}
-          >
-            <span>🇮🇳</span> for Indian founders
-          </div>
 
           {/* Main headline */}
           <h1
@@ -313,7 +294,7 @@ export default function HomePage() {
               marginBottom: 28,
             }}
           >
-            India&apos;s Startup Ideas.
+            Startup Ideas.
             <br />
             <span
               style={{
@@ -624,7 +605,7 @@ export default function HomePage() {
               marginBottom: 40,
             }}
           >
-            IdeaMash cuts through the noise. Post your startup idea. Get voted on by the Indian founder community.{' '}
+            IdeaMash cuts through the noise. Post your startup idea. Get voted on by the founder community.{' '}
             Find out if it&apos;s{' '}
             <strong style={{ color: '#3dffc0' }}>🔥 crazy shit</strong> worth building — or straight to the{' '}
             <strong style={{ color: '#ff4d6d' }}>🗑 dump</strong>.

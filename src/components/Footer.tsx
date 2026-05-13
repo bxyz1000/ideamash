@@ -40,7 +40,7 @@ export default function Footer() {
             <p
               style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', maxWidth: 280, lineHeight: 1.5 }}
             >
-              India&apos;s startup idea validation platform. No AI hype. Just real humans voting.
+              The startup idea validation platform. No AI hype. Just real humans voting.
             </p>
           </div>
           <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
@@ -82,7 +82,7 @@ export default function Footer() {
           }}
         >
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
-            © 2025 IdeaMash. Built for Indian founders.
+            © 2025 IdeaMash. Built for founders worldwide.
           </p>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
             🔥 crazy shit or 🗑 dump it

@@ -1,12 +1,17 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   doc,
   updateDoc,
   arrayUnion,
   arrayRemove,
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/AuthContext';
@@ -17,7 +22,7 @@ import toast from 'react-hot-toast';
 interface Idea extends ModalIdea {}
 
 interface TopIdeasDeckProps {
-  ideas: Idea[];
+  ideas: Idea[]; // used as initial/fallback only
 }
 
 const CATEGORY_PILL: Record<string, { bg: string; color: string }> = {
@@ -66,7 +71,36 @@ export default function TopIdeasDeck({ ideas: initialIdeas }: TopIdeasDeckProps)
 
   // Track drag vs click
   const dragDistanceRef = useRef(0);
-  const dragStartX = useRef(0);
+
+  // Live Firestore subscription — auto-re-sorts by heat score on every vote
+  useEffect(() => {
+    const q = query(collection(db, 'ideas'), orderBy('ts', 'desc'), limit(50));
+    const unsub = onSnapshot(q, (snap) => {
+      if (snap.empty) return; // keep showing initialIdeas fallback
+      const docs = snap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+        ts: d.data().ts?.toMillis?.() || Date.now(),
+        upvotes: d.data().upvotes || [],
+        downvotes: d.data().downvotes || [],
+        comments: d.data().comments || [],
+      })) as Idea[];
+
+      // Sort by heat score descending — top 10 only
+      const top10 = [...docs]
+        .sort((a, b) => {
+          const scoreA = heatScore(a.upvotes, a.downvotes) * (a.upvotes.length + a.downvotes.length);
+          const scoreB = heatScore(b.upvotes, b.downvotes) * (b.upvotes.length + b.downvotes.length);
+          return scoreB - scoreA;
+        })
+        .slice(0, 10);
+
+      setIdeas(top10);
+      // Reset to index 0 only if current card is no longer in new list
+      setCurrentIndex((prev) => (prev >= top10.length ? 0 : prev));
+    });
+    return unsub;
+  }, []);
 
   if (!ideas || ideas.length === 0) return null;
 
